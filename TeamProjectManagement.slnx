@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="TeamProjectManagement.Application/TeamProjectManagement.Application.csproj" />
+  <Project Path="TeamProjectManagement.Domain/TeamProjectManagement.Domain.csproj" />
+  <Project Path="TeamProjectManagement.Infrastructure/TeamProjectManagement.Infrastructure.csproj" />
   <Project Path="TeamProjectManagement/TeamProjectManagement.Api.csproj" />
 </Solution>

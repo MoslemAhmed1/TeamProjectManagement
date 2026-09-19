@@ -11,7 +11,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Common\" />
     <Folder Include="Controllers\" />
+    <Folder Include="Middlewares\" />
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TeamProjectManagement.Application\TeamProjectManagement.Application.csproj" />
+    <ProjectReference Include="..\TeamProjectManagement.Infrastructure\TeamProjectManagement.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
