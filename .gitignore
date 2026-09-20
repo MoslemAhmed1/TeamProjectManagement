@@ -5,6 +5,9 @@
 
 # Extra Files
 *.env
+*.pdf
+*.env
+.env.*
 
 
 # User-specific files
@@ -365,3 +368,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+.neon
+.env.local
