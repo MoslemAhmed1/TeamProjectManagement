@@ -2,7 +2,7 @@
 {
     public enum ProjectMemberRole
     {
-        Owner,
-        Member
+        Owner = 1,
+        Member = 2
     }
 }
