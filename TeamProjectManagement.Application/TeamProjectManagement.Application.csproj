@@ -18,7 +18,6 @@
     <Folder Include="Features\Tasks\Queries\" />
     <Folder Include="Features\Users\Commands\" />
     <Folder Include="Features\Users\Queries\" />
-    <Folder Include="Interfaces\Repositories\" />
     <Folder Include="Interfaces\Services\" />
     <Folder Include="Mappings\" />
     <Folder Include="Common\" />
