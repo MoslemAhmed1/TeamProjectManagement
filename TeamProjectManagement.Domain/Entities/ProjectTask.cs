@@ -9,14 +9,14 @@ namespace TeamProjectManagement.Domain.Entities
         public string Description { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public DateTime DueAt { get; set; }
+        public DateTime? DueAt { get; set; }
         public ProjectTaskPriority Priority { get; set; }
         public ProjectTaskStatus Status { get; set; }
 
         public Guid ProjectId { get; set; }
         public Project Project { get; set; } = null!;
 
-        public Guid AssignedToId { get; set; }
-        public User AssignedTo { get; set; } = null!;
+        public Guid? AssignedToId { get; set; }
+        public User? AssignedTo { get; set; }
     }
 }

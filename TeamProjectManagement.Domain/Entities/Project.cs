@@ -7,7 +7,6 @@
         public string Description { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public decimal Progress { get; set; }
 
 
         public Guid OwnerId { get; set; }
