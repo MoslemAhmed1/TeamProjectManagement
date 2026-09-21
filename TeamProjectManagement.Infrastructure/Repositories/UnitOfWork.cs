@@ -27,6 +27,7 @@ namespace TeamProjectManagement.Infrastructure.Repositories
             if (_transaction == null)
                 throw new InvalidOperationException("No active transaction to commit.");
 
+            await _context.SaveChangesAsync();
             await _transaction.CommitAsync();
             await _transaction.DisposeAsync();
             _transaction = null;

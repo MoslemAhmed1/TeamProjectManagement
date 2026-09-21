@@ -17,11 +17,13 @@ namespace TeamProjectManagement.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<ProjectTask?> GetByProjectIdAndTaskIdAsync(Guid projectId, Guid taskId)
+
+
+        public async Task<ProjectTask?> GetTaskByIdAsync(Guid taskId)
         {
             return await _context.ProjectTasks
                 .Include(t => t.AssignedTo)
-                .FirstOrDefaultAsync(t => t.ProjectId == projectId && t.Id == taskId);
+                .FirstOrDefaultAsync(t => t.Id == taskId);
         }
 
         public async Task<PagedResult<ProjectTask>> GetTasksByProjectIdAsync(Guid projectId, TaskQueryParameters queryParameters)
@@ -55,10 +57,7 @@ namespace TeamProjectManagement.Infrastructure.Repositories
             await _context.ProjectTasks.AddAsync(projectTask);
         }
 
-        public void UpdateProjectTask(ProjectTask projectTask)
-        {
-            _context.ProjectTasks.Update(projectTask);
-        }
+
 
         public void DeleteProjectTask(ProjectTask projectTask)
         {

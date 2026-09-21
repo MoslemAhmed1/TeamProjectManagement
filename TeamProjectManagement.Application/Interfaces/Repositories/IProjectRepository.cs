@@ -20,6 +20,8 @@ namespace TeamProjectManagement.Application.Interfaces.Repositories
         Task<Project?> GetProjectByIdAsync(Guid projectId);
         Task<Project?> GetProjectDetailsByIdAsync(Guid projectId);
         Task<PagedResult<Project>> GetUserProjectsAsync(Guid userId, ProjectQueryParameters queryParameters);
+        Task<PagedResult<Project>> GetMyOwnedProjectsAsync(Guid userId, ProjectQueryParameters queryParameters);
+        Task<PagedResult<Project>> GetMyMemberProjectsAsync(Guid userId, ProjectQueryParameters queryParameters);
         Task AddProjectAsync(Project project);
         void DeleteProject(Project project);
     }

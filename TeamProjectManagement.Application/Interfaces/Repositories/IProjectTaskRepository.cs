@@ -19,11 +19,12 @@ namespace TeamProjectManagement.Application.Interfaces.Repositories
 
         */
 
-        Task<ProjectTask?> GetByProjectIdAndTaskIdAsync(Guid projectId, Guid taskId);
+
+        Task<ProjectTask?> GetTaskByIdAsync(Guid taskId);
         Task<PagedResult<ProjectTask>> GetTasksByProjectIdAsync(Guid projectId, TaskQueryParameters queryParameters);
         Task<PagedResult<ProjectTask>> GetTasksByUserIdAsync(Guid userId, TaskQueryParameters queryParameters);
         Task AddProjectTaskAsync(ProjectTask projectTask);
-        void UpdateProjectTask(ProjectTask projectTask);
+
         void DeleteProjectTask(ProjectTask projectTask);
         Task<double> GetProjectProgressAsync(Guid projectId);
         Task UnassignAllTasksAsync(Guid projectId, Guid userId);

@@ -1,4 +1,4 @@
-﻿using TeamProjectManagement.Domain.Entities;
+using TeamProjectManagement.Domain.Entities;
 
 namespace TeamProjectManagement.Application.Interfaces.Repositories
 {
@@ -16,9 +16,10 @@ namespace TeamProjectManagement.Application.Interfaces.Repositories
         */
 
         Task<User?> GetUserByIdAsync(Guid userId);
-        Task<User?> GetUserByUsernameOrEmailAsync(string username, string email);
+        Task<User?> FindByIdentifierAsync(string identifier);
         Task<(bool usernameExists, bool emailExists)> ExistsByUsernameOrEmailAsync(string username, string email);
         Task AddUserAsync(User user);
+
 
     }
 }

@@ -18,8 +18,9 @@ namespace TeamProjectManagement.Application.Interfaces.Repositories
         */
 
         Task<ProjectMemberRole?> GetRoleAsync(Guid projectId, Guid userId);
+        Task<ProjectMember?> GetMemberAsync(Guid projectId, Guid userId);
         Task<bool> IsMemberAsync(Guid projectId, Guid userId);
-        Task<PagedResult<ProjectMember>> GetMembersAsync(Guid projectId, QueryParameters queryParameters);
+        Task<PagedResult<ProjectMember>> GetMembersAsync(Guid projectId, QueryParameters queryParameters, Guid? excludeUserId = null);
         Task AddMemberAsync(ProjectMember member);
         void RemoveMember(ProjectMember member);
     }

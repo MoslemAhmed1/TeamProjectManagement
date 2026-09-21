@@ -54,6 +54,40 @@ namespace TeamProjectManagement.Infrastructure.Repositories
             return await query.ToPagedResultAsync(queryParameters.PageNumber, queryParameters.PageSize);
         }
 
+        public async Task<PagedResult<Project>> GetMyOwnedProjectsAsync(Guid userId, ProjectQueryParameters queryParameters)
+        {
+            var query = _context.Projects
+                .AsNoTracking()
+                .Include(p => p.Owner)
+                .Where(p => p.OwnerId == userId);
+
+            if (!string.IsNullOrWhiteSpace(queryParameters.SearchTerm))
+            {
+                var searchTerm = queryParameters.SearchTerm.ToLower();
+                query = query.Where(p => p.Name.ToLower().Contains(searchTerm) || (p.Description != null && p.Description.ToLower().Contains(searchTerm)));
+            }
+
+            query = query.ApplySort(queryParameters.SortBy, queryParameters.SortDescending);
+            return await query.ToPagedResultAsync(queryParameters.PageNumber, queryParameters.PageSize);
+        }
+
+        public async Task<PagedResult<Project>> GetMyMemberProjectsAsync(Guid userId, ProjectQueryParameters queryParameters)
+        {
+            var query = _context.Projects
+                .AsNoTracking()
+                .Include(p => p.Owner)
+                .Where(p => p.OwnerId != userId && p.Members.Any(m => m.UserId == userId));
+
+            if (!string.IsNullOrWhiteSpace(queryParameters.SearchTerm))
+            {
+                var searchTerm = queryParameters.SearchTerm.ToLower();
+                query = query.Where(p => p.Name.ToLower().Contains(searchTerm) || (p.Description != null && p.Description.ToLower().Contains(searchTerm)));
+            }
+
+            query = query.ApplySort(queryParameters.SortBy, queryParameters.SortDescending);
+            return await query.ToPagedResultAsync(queryParameters.PageNumber, queryParameters.PageSize);
+        }
+
         public async Task AddProjectAsync(Project project)
         {
             await _context.Projects.AddAsync(project);
