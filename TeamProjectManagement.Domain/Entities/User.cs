@@ -11,6 +11,7 @@ namespace TeamProjectManagement.Domain.Entities
         public List<Project> OwnedProjects { get; set; } = new List<Project>();
         public List<ProjectMember> ProjectMemberships { get; set; } = new List<ProjectMember>();
         public List<ProjectTask> AssignedTasks { get; set; } = new List<ProjectTask>();
+        public List<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 
     }
 }
