@@ -1,6 +1,12 @@
 using DotNetEnv;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using TeamProjectManagement.Application.Settings;
 using TeamProjectManagement.Infrastructure.Context;
+using TeamProjectManagement.Api.Middlewares;
+using TeamProjectManagement.Application;
 
 Env.Load();
 
@@ -13,6 +19,32 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+
+var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET") ?? string.Empty;
+
+builder.Services.Configure<JwtSettings>(options =>
+{
+    builder.Configuration.GetSection("Jwt").Bind(options);
+    options.Secret = jwtSecret;
+});
+
+builder.Services.AddAppDependencies();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
 
 var app = builder.Build();
 
@@ -51,6 +83,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
