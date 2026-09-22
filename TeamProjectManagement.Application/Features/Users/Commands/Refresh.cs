@@ -19,7 +19,8 @@ namespace TeamProjectManagement.Application.Features.Users.Commands
     {
         public async Task<AuthViewModel> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
-            var storedToken = await refreshTokenRepository.GetRefreshTokenAsync(request.RefreshToken);
+            var hashedRequestToken = authService.HashToken(request.RefreshToken);
+            var storedToken = await refreshTokenRepository.GetRefreshTokenAsync(hashedRequestToken);
 
             if (storedToken is null || storedToken.IsRevoked || storedToken.ExpiresAt < DateTime.UtcNow)
                 throw new UnauthorizedException("Invalid or expired refresh token.");
@@ -27,19 +28,19 @@ namespace TeamProjectManagement.Application.Features.Users.Commands
             var user = storedToken.User;
 
             var newAccessToken = tokenService.GenerateAccessToken(user);
-            var newRefreshTokenString = tokenService.GenerateRefreshToken();
+            var newRefreshToken = tokenService.GenerateRefreshToken();
 
-            var newRefreshToken = new RefreshToken
+            var refreshToken = new RefreshToken
             {
                 Id = Guid.NewGuid(),
-                Token = newRefreshTokenString,
+                Token = authService.HashToken(newRefreshToken),
                 UserId = user.Id,
-                ExpiresAt = DateTime.UtcNow.AddDays(7) // TODO: should be configuration, and obtained from Auth/Token Service
+                ExpiresAt = tokenService.GetRefreshTokenExpiry()
             };
 
             storedToken.IsRevoked = true;
 
-            await refreshTokenRepository.AddRefreshTokenAsync(newRefreshToken);
+            await refreshTokenRepository.AddRefreshTokenAsync(refreshToken);
             await unitOfWork.SaveChangesAsync();
 
             return new AuthViewModel

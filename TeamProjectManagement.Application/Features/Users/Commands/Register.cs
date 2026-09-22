@@ -35,15 +35,15 @@ namespace TeamProjectManagement.Application.Features.Users.Commands
                 PasswordHash = authService.HashPassword(request.Password)
             };
 
-            var accessToken = tokenService.GenerateAccessToken(user);
-            var refreshTokenString = tokenService.GenerateRefreshToken();
+            var newAccessToken = tokenService.GenerateAccessToken(user);
+            var newRefreshToken = tokenService.GenerateRefreshToken();
 
             var refreshToken = new RefreshToken
             {
                 Id = Guid.NewGuid(),
-                Token = refreshTokenString,
+                Token = authService.HashToken(newRefreshToken),
                 UserId = user.Id,
-                ExpiresAt = DateTime.UtcNow.AddDays(7) // TODO: should be configuration, and obtained from Auth/Token Service
+                ExpiresAt = tokenService.GetRefreshTokenExpiry()
             };
 
             await unitOfWork.BeginTransactionAsync();
@@ -61,7 +61,7 @@ namespace TeamProjectManagement.Application.Features.Users.Commands
 
             return new AuthViewModel
             {
-                AccessToken = accessToken,
+                AccessToken = newAccessToken,
                 User = user.ToViewModel()
             };
         }
