@@ -6,5 +6,7 @@ namespace TeamProjectManagement.Application.Interfaces.Services
     {
         string GenerateAccessToken(User user);
         string GenerateRefreshToken();
+        DateTime GetAccessTokenExpiry();
+        DateTime GetRefreshTokenExpiry();
     }
 }

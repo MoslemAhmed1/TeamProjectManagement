@@ -2,7 +2,8 @@ namespace TeamProjectManagement.Application.Interfaces.Services
 {
     public interface IAuthService
     {
-        string HashPassword(string plainTextPassword);
-        bool VerifyPassword(string plainTextPassword, string hashedPassword);
+        string HashPassword(string password);
+        bool VerifyPassword(string password, string hashedPassword);
+        string HashToken(string token);
     }
 }

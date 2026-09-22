@@ -7,17 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DTOs\**" />
+    <Compile Remove="Features\Users\Queries\**" />
+    <EmbeddedResource Remove="DTOs\**" />
+    <EmbeddedResource Remove="Features\Users\Queries\**" />
+    <None Remove="DTOs\**" />
+    <None Remove="Features\Users\Queries\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TeamProjectManagement.Domain\TeamProjectManagement.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\" />
     <Folder Include="Features\Projects\Commands\" />
     <Folder Include="Features\Projects\Queries\" />
     <Folder Include="Features\Tasks\Commands\" />
     <Folder Include="Features\Tasks\Queries\" />
     <Folder Include="Features\Users\Commands\" />
-    <Folder Include="Features\Users\Queries\" />
     <Folder Include="Interfaces\Services\" />
     <Folder Include="Mappings\" />
     <Folder Include="Common\" />
