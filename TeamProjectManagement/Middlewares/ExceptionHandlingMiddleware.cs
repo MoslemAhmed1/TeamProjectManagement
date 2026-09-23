@@ -48,7 +48,6 @@ namespace TeamProjectManagement.Api.Middlewares
                 { 
                     Success = false, 
                     Message = "An internal server error occurred.", 
-                    Errors = new List<string> { exception.Message }, 
                     StatusCode = 500 
                 }) // Note: For prod we shouldn't expose exception.Message directly, but fine for now
             };

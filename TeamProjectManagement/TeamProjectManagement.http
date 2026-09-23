@@ -1,0 +1,208 @@
+@host = https://localhost:7224
+@contentType = application/json
+
+# After login/register, the token is filled automatically if you use the REST Client extension.
+# You can also paste a JWT here:
+@token =
+
+# Fill these from responses (create project / create task) or from GET lists.
+@projectId = 00000000-0000-0000-0000-000000000000
+@taskId = 00000000-0000-0000-0000-000000000000
+
+# Seeded users (AppDbContextSeeder): password is Test123!
+# testuser1 owns "Alpha Protocol", testuser2 owns "Beta Migration"
+@memberUserId = 00000000-0000-0000-0000-000000000000
+
+# Status: ToDo | InProgress | Done
+# Priority: Low | Medium | High
+
+### ===================== Auth =====================
+
+# @name register
+POST {{host}}/api/Auth/register
+Content-Type: {{contentType}}
+
+{
+  "username": "newuser",
+  "email": "newuser@example.com",
+  "password": "Test123!"
+}
+
+###
+
+# @name login
+POST {{host}}/api/Auth/login
+Content-Type: {{contentType}}
+
+{
+  "identifier": "testuser1",
+  "password": "Test123!"
+}
+
+###
+
+# Uses the refreshToken cookie from login/register
+POST {{host}}/api/Auth/refresh
+
+###
+
+PUT {{host}}/api/Auth/profile
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "username": "testuser1",
+  "email": "testuser1@example.com",
+  "password": "Test123!"
+}
+
+###
+
+POST {{host}}/api/Auth/logout
+
+### ===================== Projects =====================
+
+GET {{host}}/api/Projects?pageNumber=1&pageSize=10&searchTerm=
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+
+###
+
+GET {{host}}/api/Projects/owned?pageNumber=1&pageSize=10
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+
+###
+
+GET {{host}}/api/Projects/member?pageNumber=1&pageSize=10
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+
+###
+
+# @name createProject
+POST {{host}}/api/Projects
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Sprint Board",
+  "description": "Tasks for the current sprint"
+}
+
+###
+
+GET {{host}}/api/Projects/{{createProject.response.body.$.data.id}}
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+
+###
+
+PUT {{host}}/api/Projects/{{createProject.response.body.$.data.id}}
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Sprint Board Updated",
+  "description": "Updated description"
+}
+
+###
+
+GET {{host}}/api/Projects/{{createProject.response.body.$.data.id}}/progress
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+
+###
+
+DELETE {{host}}/api/Projects/{{createProject.response.body.$.data.id}}
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+
+### ===================== Members =====================
+
+GET {{host}}/api/projects/{{createProject.response.body.$.data.id}}/members?pageNumber=1&pageSize=10
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+
+###
+
+POST {{host}}/api/projects/{{createProject.response.body.$.data.id}}/members
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "userId": "{{memberUserId}}"
+}
+
+###
+
+DELETE {{host}}/api/projects/{{createProject.response.body.$.data.id}}/members/{{memberUserId}}
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+
+### ===================== Tasks =====================
+
+GET {{host}}/api/projects/{{createProject.response.body.$.data.id}}/tasks?pageNumber=1&pageSize=10&status=Done
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+
+###
+
+# @name createTask
+POST {{host}}/api/projects/{{createProject.response.body.$.data.id}}/tasks
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "title": "Write API tests",
+  "description": "Cover the main endpoints",
+  "priority": "Medium",
+  "dueAt": "2026-10-01T00:00:00Z",
+  "assignedToId": null
+}
+
+###
+
+GET {{host}}/api/projects/{{createProject.response.body.$.data.id}}/tasks/{{createTask.response.body.$.data.id}}
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+
+###
+
+PUT {{host}}/api/projects/{{createProject.response.body.$.data.id}}/tasks/{{createTask.response.body.$.data.id}}
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "title": "Write API tests (updated)",
+  "description": "Cover auth, projects, tasks, members",
+  "priority": "High",
+  "status": "InProgress",
+  "dueAt": "2026-10-05T00:00:00Z"
+}
+
+###
+
+PATCH {{host}}/api/projects/{{createProject.response.body.$.data.id}}/tasks/{{createTask.response.body.$.data.id}}/status
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "status": "Done"
+}
+
+###
+
+POST {{host}}/api/projects/{{createProject.response.body.$.data.id}}/tasks/{{createTask.response.body.$.data.id}}/assign
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "assignedToId": "{{memberUserId}}"
+}
+
+###
+
+POST {{host}}/api/projects/{{createProject.response.body.$.data.id}}/tasks/{{createTask.response.body.$.data.id}}/unassign
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+
+###
+
+DELETE {{host}}/api/projects/{{createProject.response.body.$.data.id}}/tasks/{{createTask.response.body.$.data.id}}
+Authorization: Bearer {{login.response.body.$.data.accessToken}}
+
+### ===================== My tasks =====================
+
+GET {{host}}/api/tasks/my?pageNumber=1&pageSize=10
+Authorization: Bearer {{login.response.body.$.data.accessToken}}

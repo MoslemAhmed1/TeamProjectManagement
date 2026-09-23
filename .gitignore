@@ -5,10 +5,10 @@
 
 # Extra Files
 *.env
+.env
+.env.local
+!.env.sample
 *.pdf
-*.env
-.env.*
-
 
 # User-specific files
 *.rsuser
