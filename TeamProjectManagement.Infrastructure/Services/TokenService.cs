@@ -52,11 +52,6 @@ namespace TeamProjectManagement.Infrastructure.Services
             return Convert.ToBase64String(randomNumber);
         }
 
-        public DateTime GetAccessTokenExpiry()
-        {
-            return DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationMinutes);
-        }
-
         public DateTime GetRefreshTokenExpiry()
         {
             return DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationDays);

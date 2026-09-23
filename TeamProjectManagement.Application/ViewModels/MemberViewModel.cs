@@ -1,6 +1,6 @@
 namespace TeamProjectManagement.Application.ViewModels
 {
-    public class MemberViewModel
+    public record MemberViewModel
     {
         public Guid UserId { get; set; }
         public string Username { get; set; } = null!;

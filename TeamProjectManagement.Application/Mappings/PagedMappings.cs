@@ -14,7 +14,10 @@ namespace TeamProjectManagement.Application.Mappings
                 Items = pagedResult.Items.Select(mapFunc).ToList(),
                 TotalCount = pagedResult.TotalCount,
                 PageNumber = pagedResult.PageNumber,
-                PageSize = pagedResult.PageSize
+                PageSize = pagedResult.PageSize,
+                TotalPages = pagedResult.TotalPages,
+                HasNext = pagedResult.HasNext,
+                HasPrevious = pagedResult.HasPrevious
             };
         }
     }

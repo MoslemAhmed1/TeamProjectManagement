@@ -1,6 +1,6 @@
 namespace TeamProjectManagement.Application.ViewModels
 {
-    public class PagedViewModel<T>
+    public record PagedViewModel<T>
     {
         public List<T> Items { get; set; } = new();
         public int TotalCount { get; set; }
