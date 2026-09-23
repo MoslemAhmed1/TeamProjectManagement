@@ -7,33 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DTOs\**" />
-    <Compile Remove="Features\Users\Queries\**" />
-    <EmbeddedResource Remove="DTOs\**" />
-    <EmbeddedResource Remove="Features\Users\Queries\**" />
-    <None Remove="DTOs\**" />
-    <None Remove="Features\Users\Queries\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\TeamProjectManagement.Domain\TeamProjectManagement.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Projects\Commands\" />
-    <Folder Include="Features\Projects\Queries\" />
-    <Folder Include="Features\Tasks\Commands\" />
-    <Folder Include="Features\Tasks\Queries\" />
-    <Folder Include="Features\Users\Commands\" />
-    <Folder Include="Interfaces\Services\" />
-    <Folder Include="Mappings\" />
-    <Folder Include="Common\" />
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="MediatR" Version="14.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.12" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.12" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.12" />
   </ItemGroup>
 
 </Project>
