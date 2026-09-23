@@ -3,15 +3,15 @@
 
 # After login/register, the token is filled automatically if you use the REST Client extension.
 # You can also paste a JWT here:
-@token =
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3NTg3ZWNjNS05NjAxLTRjZjctODFmMS1mNjZhNDU0ODE1NTYiLCJ1bmlxdWVfbmFtZSI6InRlc3R1c2VyMTEiLCJlbWFpbCI6InRlc3R1c2VyMUBleGFtcGxlLmNvbSIsIm5iZiI6MTc5MDE4MTkxNiwiZXhwIjoxNzkwMTg1NTE2LCJpYXQiOjE3OTAxODE5MTYsImlzcyI6IlRlYW1Qcm9qZWN0TWFuYWdlbWVudEFQSSIsImF1ZCI6IlRlYW1Qcm9qZWN0TWFuYWdlbWVudFVzZXJzIn0.vNa_3_4Nv3IOiYkeSjW2retsfQbEi5MWnslS5NK2MWY
 
 # Fill these from responses (create project / create task) or from GET lists.
-@projectId = 00000000-0000-0000-0000-000000000000
-@taskId = 00000000-0000-0000-0000-000000000000
+@projectId = 34b5d9f2-956e-4b39-a911-e9c9acd5adc0
+@taskId = 3afa0185-a111-4d43-a12b-722e94e5cfc9
 
 # Seeded users (AppDbContextSeeder): password is Test123!
 # testuser1 owns "Alpha Protocol", testuser2 owns "Beta Migration"
-@memberUserId = 00000000-0000-0000-0000-000000000000
+@memberUserId = bafd1a0b-1bed-46df-b499-ad0e5b6e94b4
 
 # Status: ToDo | InProgress | Done
 # Priority: Low | Medium | High
@@ -35,7 +35,7 @@ POST {{host}}/api/Auth/login
 Content-Type: {{contentType}}
 
 {
-  "identifier": "testuser1",
+  "identifier": "testuser11",
   "password": "Test123!"
 }
 
