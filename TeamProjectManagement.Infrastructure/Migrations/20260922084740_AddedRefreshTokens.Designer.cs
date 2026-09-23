@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TeamProjectManagement.Infrastructure.Context;
@@ -11,9 +12,11 @@ using TeamProjectManagement.Infrastructure.Context;
 namespace TeamProjectManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260922084740_AddedRefreshTokens")]
+    partial class AddedRefreshTokens
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,7 +53,7 @@ namespace TeamProjectManagement.Infrastructure.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("TeamProjectManagement.Domain.Entities.ProjectMember", b =>
@@ -70,7 +73,7 @@ namespace TeamProjectManagement.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ProjectMembers", (string)null);
+                    b.ToTable("ProjectMembers");
                 });
 
             modelBuilder.Entity("TeamProjectManagement.Domain.Entities.ProjectTask", b =>
@@ -119,7 +122,7 @@ namespace TeamProjectManagement.Infrastructure.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectTasks", (string)null);
+                    b.ToTable("ProjectTasks");
                 });
 
             modelBuilder.Entity("TeamProjectManagement.Domain.Entities.RefreshToken", b =>
@@ -129,7 +132,9 @@ namespace TeamProjectManagement.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<DateTime>("ExpiresAt")
                         .HasColumnType("timestamp with time zone");
@@ -137,7 +142,7 @@ namespace TeamProjectManagement.Infrastructure.Migrations
                     b.Property<bool>("IsRevoked")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("TokenHash")
+                    b.Property<string>("Token")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
@@ -146,9 +151,6 @@ namespace TeamProjectManagement.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TokenHash")
-                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -186,7 +188,7 @@ namespace TeamProjectManagement.Infrastructure.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("TeamProjectManagement.Domain.Entities.Project", b =>

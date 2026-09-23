@@ -27,28 +27,16 @@ namespace TeamProjectManagement.Infrastructure.Context
             {
                 if (entry.State == EntityState.Added)
                 {
-                    if (entry.Entity is User user)
-                        user.CreatedAt = now;
+                    if (entry.Entity is IHasCreatedAt created)
+                        created.CreatedAt = now;
 
-                    if (entry.Entity is Project project)
-                    {
-                        project.CreatedAt = now;
-                        project.UpdatedAt = now;
-                    }
-
-                    if (entry.Entity is ProjectTask task)
-                    {
-                        task.CreatedAt = now;
-                        task.UpdatedAt = now;
-                    }
+                    if (entry.Entity is IHasUpdatedAt updatedOnAdd)
+                        updatedOnAdd.UpdatedAt = now;
                 }
                 else if (entry.State == EntityState.Modified)
                 {
-                    if (entry.Entity is Project project)
-                        project.UpdatedAt = now;
-
-                    if (entry.Entity is ProjectTask task)
-                        task.UpdatedAt = now;
+                    if (entry.Entity is IHasUpdatedAt updatedOnEdit)
+                        updatedOnEdit.UpdatedAt = now;
                 }
             }
 

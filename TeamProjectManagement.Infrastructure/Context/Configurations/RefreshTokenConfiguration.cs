@@ -12,15 +12,18 @@ namespace TeamProjectManagement.Infrastructure.Context.Configurations
 
             builder.HasKey(rt => rt.Id);
 
-            builder.Property(rt => rt.Token)
+            builder.Property(rt => rt.TokenHash)
                 .IsRequired()
                 .HasMaxLength(255);
+
+            builder.HasIndex(rt => rt.TokenHash)
+                .IsUnique();
 
             builder.Property(rt => rt.ExpiresAt)
                 .IsRequired();
 
             builder.Property(rt => rt.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                .IsRequired();
 
             builder.HasOne(rt => rt.User)
                 .WithMany(u => u.RefreshTokens)

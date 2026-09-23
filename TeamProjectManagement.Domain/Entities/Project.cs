@@ -1,10 +1,24 @@
 namespace TeamProjectManagement.Domain.Entities
 {
-    public class Project
+    public class Project : IHasCreatedAt, IHasUpdatedAt
     {
+        private string _name = null!;
+        private string? _description;
+
         public Guid Id { get; set; }
-        public string Name { get; set; } = null!;
-        public string? Description { get; set; }
+
+        public string Name
+        {
+            get => _name;
+            set => _name = Text.Required(value);
+        }
+
+        public string? Description
+        {
+            get => _description;
+            set => _description = Text.Optional(value);
+        }
+
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
@@ -15,4 +29,3 @@ namespace TeamProjectManagement.Domain.Entities
         public List<ProjectTask> Tasks { get; set; } = new List<ProjectTask>();
     }
 }
-
