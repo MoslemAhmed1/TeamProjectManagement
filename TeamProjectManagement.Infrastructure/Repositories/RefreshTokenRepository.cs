@@ -23,7 +23,7 @@ namespace TeamProjectManagement.Infrastructure.Repositories
         {
             return await _context.RefreshTokens
                 .Include(rt => rt.User)
-                .FirstOrDefaultAsync(rt => rt.Token == token);
+                .FirstOrDefaultAsync(rt => rt.TokenHash == token);
         }
     }
 }

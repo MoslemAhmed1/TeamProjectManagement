@@ -36,19 +36,10 @@ namespace TeamProjectManagement.Infrastructure.Repositories
             var query = _context.Projects
                 .AsNoTracking()
                 .Include(p => p.Owner)
+                .Include(p => p.Tasks)
                 .Where(p => p.OwnerId == userId || p.Members.Any(m => m.UserId == userId));
 
-            // Search by name or description
-            if (!string.IsNullOrWhiteSpace(queryParameters.SearchTerm))
-            {
-                var searchTerm = queryParameters.SearchTerm.ToLower();
-                query = query.Where(p =>
-                    p.Name.ToLower().Contains(searchTerm) ||
-                    (p.Description != null && p.Description.ToLower().Contains(searchTerm))
-                );
-            }
-
-            // Sort
+            query = ApplySearch(query, queryParameters.SearchTerm);
             query = query.ApplySort(queryParameters.SortBy, queryParameters.SortDescending);
 
             return await query.ToPagedResultAsync(queryParameters.PageNumber, queryParameters.PageSize);
@@ -59,15 +50,12 @@ namespace TeamProjectManagement.Infrastructure.Repositories
             var query = _context.Projects
                 .AsNoTracking()
                 .Include(p => p.Owner)
+                .Include(p => p.Tasks)
                 .Where(p => p.OwnerId == userId);
 
-            if (!string.IsNullOrWhiteSpace(queryParameters.SearchTerm))
-            {
-                var searchTerm = queryParameters.SearchTerm.ToLower();
-                query = query.Where(p => p.Name.ToLower().Contains(searchTerm) || (p.Description != null && p.Description.ToLower().Contains(searchTerm)));
-            }
-
+            query = ApplySearch(query, queryParameters.SearchTerm);
             query = query.ApplySort(queryParameters.SortBy, queryParameters.SortDescending);
+
             return await query.ToPagedResultAsync(queryParameters.PageNumber, queryParameters.PageSize);
         }
 
@@ -76,15 +64,12 @@ namespace TeamProjectManagement.Infrastructure.Repositories
             var query = _context.Projects
                 .AsNoTracking()
                 .Include(p => p.Owner)
+                .Include(p => p.Tasks)
                 .Where(p => p.OwnerId != userId && p.Members.Any(m => m.UserId == userId));
 
-            if (!string.IsNullOrWhiteSpace(queryParameters.SearchTerm))
-            {
-                var searchTerm = queryParameters.SearchTerm.ToLower();
-                query = query.Where(p => p.Name.ToLower().Contains(searchTerm) || (p.Description != null && p.Description.ToLower().Contains(searchTerm)));
-            }
-
+            query = ApplySearch(query, queryParameters.SearchTerm);
             query = query.ApplySort(queryParameters.SortBy, queryParameters.SortDescending);
+
             return await query.ToPagedResultAsync(queryParameters.PageNumber, queryParameters.PageSize);
         }
 
@@ -96,6 +81,17 @@ namespace TeamProjectManagement.Infrastructure.Repositories
         public void DeleteProject(Project project)
         {
             _context.Projects.Remove(project);
+        }
+
+        private static IQueryable<Project> ApplySearch(IQueryable<Project> query, string? searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+                return query;
+
+            var term = searchTerm.Trim().ToLower();
+            return query.Where(p =>
+                p.Name.ToLower().Contains(term) ||
+                (p.Description != null && p.Description.ToLower().Contains(term)));
         }
     }
 }

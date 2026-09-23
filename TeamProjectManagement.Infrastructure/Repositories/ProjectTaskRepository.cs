@@ -34,6 +34,7 @@ namespace TeamProjectManagement.Infrastructure.Repositories
                 .Where(t => t.ProjectId == projectId);
 
             query = ApplyTaskFilters(query, queryParameters);
+            query = query.ApplySort(queryParameters.SortBy, queryParameters.SortDescending);
 
             return await query.ToPagedResultAsync(queryParameters.PageNumber, queryParameters.PageSize);
         }
@@ -57,8 +58,6 @@ namespace TeamProjectManagement.Infrastructure.Repositories
             await _context.ProjectTasks.AddAsync(projectTask);
         }
 
-
-
         public void DeleteProjectTask(ProjectTask projectTask)
         {
             _context.ProjectTasks.Remove(projectTask);
@@ -67,6 +66,7 @@ namespace TeamProjectManagement.Infrastructure.Repositories
         public async Task<double> GetProjectProgressAsync(Guid projectId)
         {
             var tasks = await _context.ProjectTasks
+                .AsNoTracking()
                 .Where(t => t.ProjectId == projectId)
                 .Select(t => t.Status)
                 .ToListAsync();
@@ -109,7 +109,7 @@ namespace TeamProjectManagement.Infrastructure.Repositories
             // Search by title or description
             if (!string.IsNullOrWhiteSpace(parameters.SearchTerm))
             {
-                var searchTerm = parameters.SearchTerm.ToLower();
+                var searchTerm = parameters.SearchTerm.Trim().ToLower();
                 query = query.Where(t =>
                     t.Title.ToLower().Contains(searchTerm) ||
                     (t.Description != null && t.Description.ToLower().Contains(searchTerm)));

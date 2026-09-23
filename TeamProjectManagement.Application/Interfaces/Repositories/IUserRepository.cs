@@ -19,7 +19,5 @@ namespace TeamProjectManagement.Application.Interfaces.Repositories
         Task<User?> FindByIdentifierAsync(string identifier);
         Task<(bool usernameExists, bool emailExists)> ExistsByUsernameOrEmailAsync(string username, string email);
         Task AddUserAsync(User user);
-
-
     }
 }

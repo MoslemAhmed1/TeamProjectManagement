@@ -21,13 +21,16 @@ namespace TeamProjectManagement.Infrastructure.Repositories
 
         public async Task<User?> FindByIdentifierAsync(string identifier)
         {
-            var lowerIdent = identifier.ToLowerInvariant();
-            return await _context.Users.FirstOrDefaultAsync(u => u.Username.ToLower() == lowerIdent || u.Email.ToLower() == lowerIdent);
+            var lowerIdent = identifier.Trim().ToLowerInvariant();
+            return await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Username.ToLower() == lowerIdent || u.Email.ToLower() == lowerIdent);
         }
 
         public async Task<(bool usernameExists, bool emailExists)> ExistsByUsernameOrEmailAsync(string username, string email)
         {
             var matches = await _context.Users
+                .AsNoTracking()
                 .Where(u => u.Username.ToLower() == username.ToLower() || u.Email.ToLower() == email.ToLower())
                 .Select(u => new { u.Username, u.Email })
                 .ToListAsync();
