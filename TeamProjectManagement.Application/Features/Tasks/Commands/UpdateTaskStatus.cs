@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
 using TeamProjectManagement.Application.Exceptions;
 using TeamProjectManagement.Application.Interfaces.Repositories;
 using TeamProjectManagement.Domain.Enums;
@@ -11,7 +12,8 @@ namespace TeamProjectManagement.Application.Features.Tasks.Commands
         IProjectRepository projectRepository,
         IProjectMemberRepository memberRepository,
         IProjectTaskRepository taskRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        ILogger<UpdateTaskStatusCommandHandler> logger)
         : IRequestHandler<UpdateTaskStatusCommand>
     {
         public async Task Handle(UpdateTaskStatusCommand request, CancellationToken cancellationToken)
@@ -32,6 +34,7 @@ namespace TeamProjectManagement.Application.Features.Tasks.Commands
 
             task.Status = request.Status;
             await unitOfWork.SaveChangesAsync();
+            logger.LogInformation("User {UserId} set task {TaskId} status to {Status}", request.CallerId, task.Id, request.Status);
         }
     }
 }

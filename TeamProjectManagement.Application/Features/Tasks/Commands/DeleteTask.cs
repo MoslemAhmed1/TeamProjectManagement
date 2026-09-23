@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
 using TeamProjectManagement.Application.Exceptions;
 using TeamProjectManagement.Application.Interfaces.Repositories;
 
@@ -9,7 +10,8 @@ namespace TeamProjectManagement.Application.Features.Tasks.Commands
     public class DeleteTaskCommandHandler(
         IProjectRepository projectRepository,
         IProjectTaskRepository taskRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        ILogger<DeleteTaskCommandHandler> logger)
         : IRequestHandler<DeleteTaskCommand>
     {
         public async Task Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
@@ -23,6 +25,7 @@ namespace TeamProjectManagement.Application.Features.Tasks.Commands
 
             taskRepository.DeleteProjectTask(task);
             await unitOfWork.SaveChangesAsync();
+            logger.LogInformation("User {UserId} deleted task {TaskId}", request.CallerId, task.Id);
         }
     }
 }

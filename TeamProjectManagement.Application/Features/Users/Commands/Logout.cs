@@ -1,6 +1,6 @@
 using MediatR;
-using TeamProjectManagement.Application.Exceptions;
 using TeamProjectManagement.Application.Interfaces.Repositories;
+using TeamProjectManagement.Application.Interfaces.Services;
 
 namespace TeamProjectManagement.Application.Features.Users.Commands
 {
@@ -8,12 +8,14 @@ namespace TeamProjectManagement.Application.Features.Users.Commands
 
     public class LogoutCommandHandler(
         IRefreshTokenRepository refreshTokenRepository,
+        IAuthService authService,
         IUnitOfWork unitOfWork)
         : IRequestHandler<LogoutCommand>
     {
         public async Task Handle(LogoutCommand request, CancellationToken cancellationToken)
         {
-            var storedToken = await refreshTokenRepository.GetRefreshTokenAsync(request.RefreshToken);
+            var hashedRequestToken = authService.HashToken(request.RefreshToken);
+            var storedToken = await refreshTokenRepository.GetRefreshTokenAsync(hashedRequestToken);
 
             if (storedToken is null || storedToken.IsRevoked)
                 return;

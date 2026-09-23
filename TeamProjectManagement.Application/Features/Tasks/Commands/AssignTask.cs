@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
 using TeamProjectManagement.Application.Exceptions;
 using TeamProjectManagement.Application.Interfaces.Repositories;
 
@@ -11,7 +12,8 @@ namespace TeamProjectManagement.Application.Features.Tasks.Commands
         IProjectMemberRepository memberRepository,
         IProjectTaskRepository taskRepository,
         IUserRepository userRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        ILogger<AssignTaskCommandHandler> logger)
         : IRequestHandler<AssignTaskCommand>
     {
         public async Task Handle(AssignTaskCommand request, CancellationToken cancellationToken)
@@ -31,6 +33,7 @@ namespace TeamProjectManagement.Application.Features.Tasks.Commands
 
             task.AssignedToId = request.AssignedToId;
             await unitOfWork.SaveChangesAsync();
+            logger.LogInformation("User {UserId} assigned task {TaskId} to {AssigneeId}", request.CallerId, task.Id, request.AssignedToId);
         }
     }
 }

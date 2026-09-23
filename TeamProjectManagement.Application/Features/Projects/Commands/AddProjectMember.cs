@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
 using TeamProjectManagement.Application.Exceptions;
 using TeamProjectManagement.Application.Interfaces.Repositories;
 using TeamProjectManagement.Application.Mappings;
@@ -14,7 +15,8 @@ namespace TeamProjectManagement.Application.Features.Projects.Commands
         IProjectRepository projectRepository,
         IProjectMemberRepository memberRepository,
         IUserRepository userRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        ILogger<AddProjectMemberCommandHandler> logger)
         : IRequestHandler<AddProjectMemberCommand, MemberViewModel>
     {
         public async Task<MemberViewModel> Handle(AddProjectMemberCommand request, CancellationToken cancellationToken)
@@ -45,6 +47,7 @@ namespace TeamProjectManagement.Application.Features.Projects.Commands
             await memberRepository.AddMemberAsync(member);
             await unitOfWork.SaveChangesAsync();
 
+            logger.LogInformation("User {UserId} added member {MemberId} to project {ProjectId}", request.CallerId, request.UserId, request.ProjectId);
             return member.ToViewModel();
         }
     }

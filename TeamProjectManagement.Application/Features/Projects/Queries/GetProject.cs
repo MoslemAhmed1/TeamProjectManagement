@@ -10,8 +10,7 @@ namespace TeamProjectManagement.Application.Features.Projects.Queries
 
     public class GetProjectQueryHandler(
         IProjectRepository projectRepository,
-        IProjectMemberRepository memberRepository,
-        IProjectTaskRepository taskRepository)
+        IProjectMemberRepository memberRepository)
         : IRequestHandler<GetProjectQuery, ProjectDetailsViewModel>
     {
         public async Task<ProjectDetailsViewModel> Handle(GetProjectQuery request, CancellationToken cancellationToken)
@@ -22,9 +21,7 @@ namespace TeamProjectManagement.Application.Features.Projects.Queries
             var isMember = await memberRepository.IsMemberAsync(request.ProjectId, request.CallerId);
             if (!isMember) throw new ForbiddenException("You are not a member of this project.");
 
-            var progress = await taskRepository.GetProjectProgressAsync(request.ProjectId);
-
-            return project.ToDetailsViewModel(progress);
+            return project.ToDetailsViewModel();
         }
     }
 }

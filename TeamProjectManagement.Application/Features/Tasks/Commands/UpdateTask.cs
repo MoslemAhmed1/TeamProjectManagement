@@ -1,4 +1,5 @@
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 using TeamProjectManagement.Application.Exceptions;
 using TeamProjectManagement.Application.Interfaces.Repositories;
 using TeamProjectManagement.Domain.Enums;
@@ -7,8 +8,8 @@ namespace TeamProjectManagement.Application.Features.Tasks.Commands
 {
     public record UpdateTaskCommand(
         Guid TaskId,
-        string Title,
-        string? Description,
+        [Required] [StringLength(200, MinimumLength = 1)] string Title,
+        [StringLength(2000)] string? Description,
         ProjectTaskPriority Priority,
         ProjectTaskStatus Status,
         DateTime? DueAt,
@@ -29,8 +30,8 @@ namespace TeamProjectManagement.Application.Features.Tasks.Commands
             if (project is null || project.OwnerId != request.CallerId)
                 throw new ForbiddenException("Only the project owner can fully update tasks.");
 
-            task.Title = request.Title.Trim();
-            task.Description = request.Description?.Trim();
+            task.Title = request.Title;
+            task.Description = request.Description;
             task.Priority = request.Priority;
             task.Status = request.Status;
             task.DueAt = request.DueAt?.ToUniversalTime();

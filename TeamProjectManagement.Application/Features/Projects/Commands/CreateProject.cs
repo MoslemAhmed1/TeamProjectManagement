@@ -1,5 +1,6 @@
 using MediatR;
-using TeamProjectManagement.Application.Exceptions;
+using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
 using TeamProjectManagement.Application.Interfaces.Repositories;
 using TeamProjectManagement.Application.Mappings;
 using TeamProjectManagement.Application.ViewModels;
@@ -8,12 +9,16 @@ using TeamProjectManagement.Domain.Enums;
 
 namespace TeamProjectManagement.Application.Features.Projects.Commands
 {
-    public record CreateProjectCommand(string Name, string? Description, Guid CallerId) : IRequest<ProjectViewModel>;
+    public record CreateProjectCommand(
+        [Required] [StringLength(150, MinimumLength = 1)] string Name,
+        [StringLength(1000)] string? Description,
+        Guid CallerId) : IRequest<ProjectViewModel>;
 
     public class CreateProjectCommandHandler(
         IProjectRepository projectRepository,
         IProjectMemberRepository memberRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        ILogger<CreateProjectCommandHandler> logger)
         : IRequestHandler<CreateProjectCommand, ProjectViewModel>
     {
         public async Task<ProjectViewModel> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
@@ -21,8 +26,8 @@ namespace TeamProjectManagement.Application.Features.Projects.Commands
             var project = new Project
             {
                 Id = Guid.NewGuid(),
-                Name = request.Name.Trim(),
-                Description = request.Description?.Trim(),
+                Name = request.Name,
+                Description = request.Description,
                 OwnerId = request.CallerId,
             };
 
@@ -46,6 +51,7 @@ namespace TeamProjectManagement.Application.Features.Projects.Commands
                 throw;
             }
 
+            logger.LogInformation("User {UserId} created project {ProjectId}", request.CallerId, project.Id);
             return project.ToViewModel();
         }
     }

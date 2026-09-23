@@ -1,4 +1,6 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
 using TeamProjectManagement.Application.Exceptions;
 using TeamProjectManagement.Application.Interfaces.Repositories;
 using TeamProjectManagement.Application.Mappings;
@@ -10,8 +12,8 @@ namespace TeamProjectManagement.Application.Features.Tasks.Commands
 {
     public record CreateTaskCommand(
         Guid ProjectId,
-        string Title,
-        string? Description,
+        [Required] [StringLength(200, MinimumLength = 1)] string Title,
+        [StringLength(2000)] string? Description,
         ProjectTaskPriority Priority,
         DateTime? DueAt,
         Guid? AssignedToId,
@@ -22,7 +24,8 @@ namespace TeamProjectManagement.Application.Features.Tasks.Commands
         IProjectMemberRepository memberRepository,
         IProjectTaskRepository taskRepository,
         IUserRepository userRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        ILogger<CreateTaskCommandHandler> logger)
         : IRequestHandler<CreateTaskCommand, TaskViewModel>
     {
         public async Task<TaskViewModel> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
@@ -45,8 +48,8 @@ namespace TeamProjectManagement.Application.Features.Tasks.Commands
             var task = new ProjectTask
             {
                 Id = Guid.NewGuid(),
-                Title = request.Title.Trim(),
-                Description = request.Description?.Trim(),
+                Title = request.Title,
+                Description = request.Description,
                 Priority = request.Priority,
                 Status = ProjectTaskStatus.ToDo,
                 DueAt = request.DueAt?.ToUniversalTime(),
@@ -57,6 +60,7 @@ namespace TeamProjectManagement.Application.Features.Tasks.Commands
             await taskRepository.AddProjectTaskAsync(task);
             await unitOfWork.SaveChangesAsync();
 
+            logger.LogInformation("User {UserId} created task {TaskId} in project {ProjectId}", request.CallerId, task.Id, request.ProjectId);
             return task.ToViewModel();
         }
     }
