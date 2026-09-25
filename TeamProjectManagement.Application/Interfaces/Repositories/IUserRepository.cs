@@ -15,6 +15,7 @@ namespace TeamProjectManagement.Application.Interfaces.Repositories
 
         */
 
+        Task<User?> GetUserProfile(Guid userId);
         Task<User?> GetUserByIdAsync(Guid userId);
         Task<User?> FindByIdentifierAsync(string identifier);
         Task<(bool usernameExists, bool emailExists)> ExistsByUsernameOrEmailAsync(string username, string email);

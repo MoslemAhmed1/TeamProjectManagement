@@ -14,6 +14,11 @@ namespace TeamProjectManagement.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task<User?> GetUserProfile(Guid userId)
+        {
+            return await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
+        }
+
         public async Task<User?> GetUserByIdAsync(Guid userId)
         {
             return await _context.Users.FindAsync(userId);

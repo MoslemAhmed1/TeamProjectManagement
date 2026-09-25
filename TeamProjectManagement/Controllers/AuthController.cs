@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using TeamProjectManagement.Api.Common;
 using TeamProjectManagement.Application.Features.Users.Commands;
+using TeamProjectManagement.Application.Features.Users.Queries;
 using TeamProjectManagement.Application.ViewModels;
 
 namespace TeamProjectManagement.Api.Controllers
@@ -68,6 +69,15 @@ namespace TeamProjectManagement.Api.Controllers
             }
 
             return Ok(ApiResponse<object>.Ok(null!, "Logout successful."));
+        }
+
+        [Authorize]
+        [HttpGet("profile")]
+        public async Task<ActionResult<ApiResponse<object>>> GetProfile()
+        {
+            var query = new GetProfileQuery(User.GetUserId());
+            var result = await sender.Send(query);
+            return Ok(ApiResponse<UserViewModel>.Ok(result));
         }
 
         [Authorize]
